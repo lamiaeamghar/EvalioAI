@@ -1,0 +1,14 @@
+               type                 titre          prix      localisation       surface        pièces  ...  bedrooms     bathrooms        city        standing         étage   état
+count         10341                 10341  1.034100e+04             10341  10341.000000  10341.000000  ...   10341.0  10341.000000       10341           10341  1.034100e+04  10341
+unique            9                  9566           NaN              1037           NaN           NaN  ...       NaN           NaN         233               3           NaN      1
+top     Appartement  Appartement à vendre           NaN  Guéliz,Marrakech           NaN           NaN  ...       NaN           NaN  Casablanca  moyen standing           NaN   neuf
+freq           8761                   112           NaN               433           NaN           NaN  ...       NaN           NaN        3579            5646           NaN  10341
+mean            NaN                   NaN  1.336475e+06               NaN    106.509838      2.155788  ...       2.0      1.696693         NaN             NaN  6.659227e+04    NaN
+std             NaN                   NaN  9.036346e+05               NaN     44.012407      0.360331  ...       0.0      0.459578         NaN             NaN  6.771573e+06    NaN
+min             NaN                   NaN  6.200000e+03               NaN      0.000000      2.000000  ...       2.0      1.000000         NaN             NaN  1.000000e+00    NaN
+25%             NaN                   NaN  6.500000e+05               NaN     78.000000      2.000000  ...       2.0      1.000000         NaN             NaN  1.000000e+00    NaN
+50%             NaN                   NaN  1.150000e+06               NaN    100.000000      2.000000  ...       2.0      2.000000         NaN             NaN  2.000000e+00    NaN
+75%             NaN                   NaN  1.848000e+06               NaN    125.000000      2.000000  ...       2.0      2.000000         NaN             NaN  3.000000e+00    NaN
+max             NaN                   NaN  4.150000e+06               NaN    286.500000      3.000000  ...       2.0      2.000000         NaN             NaN  6.886061e+08    NaN
+
+[11 rows x 20 columns]

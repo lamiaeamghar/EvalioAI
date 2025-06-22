@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RealEstate AI | Prédiction Immobilière</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6C63FF;
+            --secondary: #4D44DB;
+            --accent: #FF6584;
+            --light: #F8F9FA;
+            --dark: #212529;
+            --gray: #6C757D;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            min-height: 100vh;
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+        
+        h1 {
+            font-family: 'Playfair Display', serif;
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+            font-size: 2.2rem;
+            text-align: center;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+        
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+        
+        .chat-box {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+            background: white;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        #chat-messages {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            background: url('https://www.transparenttextures.com/patterns/subtle-white-feathers.png');
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) transparent;
+        }
+        
+        #chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        #chat-messages::-webkit-scrollbar-thumb {
+            background-color: var(--primary);
+            border-radius: 3px;
+        }
+        
+        .input-area {
+            display: flex;
+            padding: 1rem;
+            background: var(--light);
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        input {
+            flex: 1;
+            padding: 0.8rem 1.2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            background: white;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        input:focus {
+            outline: none;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1), 0 0 0 2px var(--primary);
+        }
+        
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 0 1.5rem;
+            margin-left: 0.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(108, 99, 255, 0.3);
+        }
+        
+        button:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .message {
+            margin-bottom: 1rem;
+            max-width: 80%;
+            padding: 0.8rem 1.2rem;
+            border-radius: 15px;
+            line-height: 1.5;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .user-message {
+            background: var(--primary);
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 5px;
+        }
+        
+        .ai-message {
+            background: white;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            margin-right: auto;
+            border-bottom-left-radius: 5px;
+        }
+        
+        .ai-message::before {
+            content: 'AI';
+            position: absolute;
+            top: -18px;
+            left: 0;
+            font-size: 0.7rem;
+            color: var(--gray);
+            font-weight: 500;
+        }
+        
+        .examples {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .examples p {
+            color: var(--gray);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .examples ul {
+            list-style: none;
+        }
+        
+        .examples li {
+            padding: 0.5rem 0;
+            color: var(--dark);
+            position: relative;
+            padding-left: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .examples li:hover {
+            color: var(--primary);
+            transform: translateX(5px);
+        }
+        
+        .examples li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .typing-indicator {
+            display: inline-flex;
+            padding: 0.8rem 1.2rem;
+            background: white;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--gray);
+            border-radius: 50%;
+            margin: 0 2px;
+            animation: typingAnimation 1.4s infinite ease-in-out;
+        }
+        
+        .typing-dot:nth-child(1) { animation-delay: 0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        
+        @keyframes typingAnimation {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
+        }
+        
+        .price-display {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(108, 99, 255, 0.4); }
+            70% { transform: scale(1.02); box-shadow: 0 0 0 10px rgba(108, 99, 255, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(108, 99, 255, 0); }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 0;
+                border-radius: 0;
+                min-height: 100vh;
+            }
+            
+            .chat-box {
+                height: calc(100vh - 300px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-robot"></i> RealEstate AI</h1>
+        <div class="chat-box">
+            <div id="chat-messages">
+                <div class="message ai-message">
+                    Bonjour! Je suis votre assistant immobilier IA. Décrivez-moi une propriété et je vous donnerai une estimation de prix.
+                </div>
+            </div>
+            <div class="input-area">
+                <input type="text" id="user-input" placeholder="Ex: Appartement 3 pièces 80m² à Casablanca...">
+                <button id="send-btn"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+        <div class="examples">
+            <p><i class="fas fa-lightbulb"></i> Exemples à essayer :</p>
+            <ul>
+                <li>"شقة 3 غرف 120 متر في الدار البيضاء"</li>
+                <li>"Appartement 80m² 2 pièces à Rabat"</li>
+                <li>"Villa with 5 bedrooms 200m² in Marrakech"</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const chatMessages = document.getElementById('chat-messages');
+            const userInput = document.getElementById('user-input');
+            const sendBtn = document.getElementById('send-btn');
+            
+            // Animation for message appearance
+            function animateMessage(element) {
+                element.style.opacity = '0';
+                element.style.transform = 'translateY(10px)';
+                setTimeout(() => {
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }, 10);
+            }
+            
+            // Create typing indicator
+            function showTyping() {
+                const typingDiv = document.createElement('div');
+                typingDiv.className = 'message ai-message typing-indicator';
+                typingDiv.id = 'typing-indicator';
+                typingDiv.innerHTML = `
+                    <span class="typing-dot"></span>
+                    <span class="typing-dot"></span>
+                    <span class="typing-dot"></span>
+                `;
+                chatMessages.appendChild(typingDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            // Remove typing indicator
+            function hideTyping() {
+                const typing = document.getElementById('typing-indicator');
+                if (typing) typing.remove();
+            }
+            
+            // Add message to chat
+            function addMessage(text, isUser) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${isUser ? 'user-message' : 'ai-message'}`;
+                messageDiv.innerHTML = text;
+                chatMessages.appendChild(messageDiv);
+                animateMessage(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            // Handle sending message
+            async function sendMessage() {
+                const text = userInput.value.trim();
+                if (!text) return;
+                
+                addMessage(text, true);
+                userInput.value = '';
+                showTyping();
+                
+                try {
+                    const response = await fetch('/predict', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ text })
+                    });
+                    
+                    const data = await response.json();
+                    hideTyping();
+                    
+                    if (data.error) {
+                        addMessage(data.error, false);
+                    } else {
+                        addMessage(data.response, false);
+                        if (data.price) {
+                            const priceDiv = document.createElement('div');
+                            priceDiv.className = 'price-display';
+                            priceDiv.textContent = `💰 Estimation: ${new Intl.NumberFormat('fr-MA', { style: 'currency', currency: 'MAD' }).format(data.price)}`;
+                            chatMessages.appendChild(priceDiv);
+                            chatMessages.scrollTop = chatMessages.scrollHeight;
+                        }
+                    }
+                } catch (error) {
+                    hideTyping();
+                    addMessage("Désolé, une erreur s'est produite. Veuillez réessayer.", false);
+                }
+            }
+            
+            // Event listeners
+            sendBtn.addEventListener('click', sendMessage);
+            userInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') sendMessage();
+            });
+            
+            // Focus input on load
+            userInput.focus();
+        });
+    </script>
+</body>
+</html>
